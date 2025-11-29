@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Sourashtra Audio Model Demo</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/audio@0.8/dist/teachablemachine-audio.min.js"></script>
+
+  <style>
+    body {
+      font-family: Inter, sans-serif;
+      padding: 40px;
+      text-align: center;
+      background: #F7F8FA;
+    }
+    h1 {
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+    #label-container div {
+      font-size: 20px;
+      margin: 6px 0;
+    }
+    button {
+      padding: 12px 24px;
+      background: #4A6CF7;
+      color: white;
+      border-radius: 10px;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    button:hover {
+      background: #3A58C9;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Sourashtra Speech Demo</h1>
+  <p>Say “Rain” or “Rasam” and watch the model classify live.</p>
+
+  <button onclick="init()">Start Microphone</button>
+
+  <div id="label-container"></div>
+
+  <script>
+    const URL = "https://teachablemachine.withgoogle.com/models/7Wx9lgchM/";
+
+    let model, microphone, labelContainer, maxPredictions;
+
+    async function init() {
+      const modelURL = URL + "model.json";
+      const metadataURL = URL + "metadata.json";
+
+      model = await tmAudio.load(modelURL, metadataURL);
+      maxPredictions = model.getTotalClasses();
+
+      // Initialize the microphone
+      const flip = true;
+      microphone = new tmAudio.Microphone();
+      await microphone.setup();
+      await microphone.play();
+
+      window.requestAnimationFrame(loop);
+
+      labelContainer = document.getElementById("label-container");
+      labelContainer.innerHTML = "";
+      
+      for (let i = 0; i < maxPredictions; i++) {
+        labelContainer.appendChild(document.createElement("div"));
+      }
+    }
+
+    async function loop() {
+      microphone.listen();
+      await predict();
+      window.requestAnimationFrame(loop);
+    }
+
+    async function predict() {
+      const prediction = await model.predict(microphone);
+
+      for (let i = 0; i < maxPredictions; i++) {
+        const className = prediction[i].className;
+        const prob = (prediction[i].probability * 100).toFixed(1);
+
+        labelContainer.childNodes[i].innerHTML = `${className}: ${prob}%`;
+      }
+    }
+  </script>
+
+</body>
+</html>
