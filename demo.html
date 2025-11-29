@@ -23,13 +23,16 @@
 <script>
 
 async function loadModel() {
-    const URL = "./";  
+    const MODEL_URL = "https://deeps-ship-it.github.io/sourashtra-repo/model.json";
+    const METADATA_URL = "https://deeps-ship-it.github.io/sourashtra-repo/metadata.json";
+
     const recognizer = speechCommands.create(
         "BROWSER_FFT",
         undefined,
-        URL + "model.json",
-        URL + "metadata.json"
+        MODEL_URL,
+        METADATA_URL
     );
+
     await recognizer.ensureModelLoaded();
     return recognizer;
 }
@@ -40,8 +43,8 @@ async function startListening() {
     const recognizer = await loadModel();
 
     recognizer.listen(result => {
-        let scores = result.scores;  
-        let labels = recognizer.wordLabels();  
+        let scores = result.scores;
+        let labels = recognizer.wordLabels();
 
         let highest = labels[scores.indexOf(Math.max(...scores))];
 
@@ -54,6 +57,7 @@ async function startListening() {
 }
 
 </script>
+
 
 </body>
 </html>
