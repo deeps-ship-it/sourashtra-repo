@@ -4,47 +4,26 @@
   <meta charset="UTF-8" />
   <title>Sourashtra Audio Model Demo</title>
 
-  <!-- TensorFlow -->
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
-
-  <!-- Correct Teachable Machine audio library -->
-  <script src="https://cdn.jsdelivr.net/gh/googlecreativelab/teachablemachine-community@latest/libraries/audio/teachablemachine-audio.min.js"></script>
+  <!-- Working TensorFlow + Teachable Machine Audio -->
+  <script src="https://unpkg.com/@tensorflow/tfjs@latest"></script>
+  <script src="https://unpkg.com/@teachablemachine/audio@latest/dist/teachablemachine-audio.min.js"></script>
 
   <style>
-    body {
-      font-family: Inter, sans-serif;
-      padding: 40px;
-      text-align: center;
-      background: #F7F8FA;
-    }
-    h1 {
-      font-size: 28px;
-      margin-bottom: 20px;
-    }
-    #label-container div {
-      font-size: 20px;
-      margin: 6px 0;
-    }
+    body { font-family: Inter, sans-serif; padding: 40px; text-align: center; background: #F7F8FA; }
+    h1 { font-size: 28px; margin-bottom: 20px; }
+    #label-container div { font-size: 20px; margin: 6px 0; }
     button {
-      padding: 12px 24px;
-      background: #4A6CF7;
-      color: white;
-      border-radius: 10px;
-      border: none;
-      font-size: 16px;
-      cursor: pointer;
-      margin-top: 20px;
+      padding: 12px 24px; background: #4A6CF7; color: white; border-radius: 10px;
+      border: none; font-size: 16px; cursor: pointer; margin-top: 20px;
     }
-    button:hover {
-      background: #3A58C9;
-    }
+    button:hover { background: #3A58C9; }
   </style>
 
 </head>
 <body>
 
   <h1>Sourashtra Speech Demo</h1>
-  <p>Say “Rain” or “Rasam” to test your model.</p>
+
 
   <button onclick="init()">Start Microphone</button>
   <div id="label-container"></div>
@@ -64,7 +43,7 @@
       maxPredictions = model.getTotalClasses();
 
       microphone = new tmAudio.Microphone();
-      await microphone.setup(); // asks for permission
+      await microphone.setup(); 
       await microphone.play();
 
       window.requestAnimationFrame(loop);
@@ -85,11 +64,9 @@
 
     async function predict() {
       const prediction = await model.predict(microphone);
-
       for (let i = 0; i < maxPredictions; i++) {
         const className = prediction[i].className;
         const prob = (prediction[i].probability * 100).toFixed(1);
-
         labelContainer.childNodes[i].innerHTML = `${className}: ${prob}%`;
       }
     }
