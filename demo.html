@@ -16,7 +16,7 @@
 <body>
 
 <h2>Sourashtra Audio Model Demo</h2>
-<button onclick="startListening()">🎤 Start Microphone</button>
+<button onclick="startListening()"> Start Microphone</button>
 
 <div id="label">Waiting...</div>
 
@@ -38,7 +38,7 @@ async function loadModel() {
 }
 
 async function startListening() {
-    document.getElementById("label").innerHTML = "🎤 Listening...";
+    document.getElementById("label").innerHTML = "Listening...";
 
     const recognizer = await loadModel();
 
